@@ -1,7 +1,7 @@
 .documentation-sidebar-nav
-  - data.documentation.each do |section, entries|
+  - data.documentation.each do |title, section|
     %ul.nav.sidebar-nav
-      %li.title= section
-      - entries.each do |entry|
-        %li{ class: current_page.path =~ Regexp.new(entry.url) ? 'active' : '' }
-          %a{href: "/documentation/#{entry.url}"}= entry.title
+      %li.title= title
+      - section.subsections.each do |subsection|
+        %li{ class: current_page.path =~ Regexp.new(subsection.url) ? 'active' : '' }
+          %a{href: "/documentation/#{subsection.url}"}= subsection.title
