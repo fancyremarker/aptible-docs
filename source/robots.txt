@@ -1,0 +1,2 @@
+# See http://www.robotstxt.org/wc/norobots.html
+User-agent: *

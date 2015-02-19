@@ -9,6 +9,10 @@ set :js_dir, 'javascripts'
 set :images_dir, 'images'
 set :partials_dir, 'partials'
 
+# (Semi-) secrets
+set :swiftype_key, '5xFZFKzDzLBJeAZxpsHi'
+set :base_url, ENV['BASE_URL'] || 'https://support.aptible.com'
+
 activate :syntax, line_numbers: true
 activate :directory_indexes
 
@@ -61,6 +65,15 @@ activate :s3_redirect do |config|
   config.bucket = ENV['S3_BUCKET'] || 'support.aptible-staging.com'
   config.region = 'us-east-1'
   config.after_build = false
+
+  begin
+    require 'aws-keychain-util/credential_provider'
+    provider = AwsKeychainUtil::CredentialProvider.new('default', 'aws')
+    config.aws_access_key_id = provider.access_key_id
+    config.aws_secret_access_key = provider.secret_access_key
+  rescue LoadError
+    puts 'Could not load aws-keychain-util, loading credentials from ENV...'
+  end
 end
 
 data.redirects.each do |item|
